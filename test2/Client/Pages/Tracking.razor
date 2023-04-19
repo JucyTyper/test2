@@ -1,6 +1,37 @@
 ﻿@page "/tracking"
-<h3>Tracking Shipment</h3>
+@inject IProductService productservice
+@inject NavigationManager NavigationManager
+<h3>shipmentId @shipmentId</h3>
 
+<table class="table">
+    <thead>
+        <tr>
+            <th> </th>
+            <th>Status</th>
+            <th>Current Location</th>
+            <th>Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var status in productservice.Statuses)
+        {
+            <tr>
+                <td>
+                    <i class="oi oi-location"></i>
+                </td>
+                <td>@status.shipmentStatus</td>
+                <td>@status.currentLocation</td>
+                <td>@status.lastUpdated</td>
+            </tr>
+        }
+    </tbody>
+</table>
 @code {
+    Guid shipmentId = new Guid("E4FD395E-5F18-4ABF-B85D-54B69E996C48");
+    protected override async Task OnInitializedAsync()
+    {
+        await productservice.GetShipmentStatus(shipmentId);
+    }
 
 }
