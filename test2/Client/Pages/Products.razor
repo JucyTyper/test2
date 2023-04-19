@@ -6,6 +6,7 @@
 <table class="table">
     <thead>
         <tr>
+            <th> </th>
             <th>Name</th>
             <th>description</th>
             <th></th>
@@ -15,14 +16,11 @@
         @foreach(var product in productservice.Products)
         {
             <tr>
+                <td>
+                    <i class="oi oi-pencil"></i>
+                </td>
                 <td>@product.Name</td>
                 <td>@product.Description</td>
-                <td>
-                    <button class="btn btn-primary" 
-                        @onClick="(()=>ShowProduct(product.Id))">
-                        <i class="oi oi-pencil"></i>
-                </button>
-                </td>
             </tr>
         }
     </tbody>

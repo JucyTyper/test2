@@ -1,4 +1,6 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net;
+using System.Net.Http.Json;
+using test2.Client.Models;
 using test2.Shared;
 
 namespace test2.Client.Services.ProductService
@@ -11,11 +13,12 @@ namespace test2.Client.Services.ProductService
         {
             this.http = http;
         }
-        public List<Product> Products { get; set ; } = new List<Product>(); 
+        public List<Product> Products { get; set ; } = new List<Product>();
+        public List<ShipmentStatusModel> Statuses { get; set; } = new List<ShipmentStatusModel>();
 
-        public Task CreateProduct(Product product)
+        public async Task CreateProduct(AddProduct product)
         {
-            throw new NotImplementedException();
+            await http.PostAsJsonAsync("api/Product", product);
         }
 
         public Task DeleteProduct(int id)
@@ -33,6 +36,19 @@ namespace test2.Client.Services.ProductService
             var result = await http.GetFromJsonAsync<List<Product>>("api/Product");
             Products= result!.ToList();
             
+        }
+
+        public async Task GetShipmentStatus(Guid shipmentId)
+        {
+            //var result = await http.GetFromJsonAsync<List<ShipmentStatusModel>>($"http://192.180.2.128:4000/api/shipment/getShipmentStatus/{shipmentId}");
+            //statuses = result!.ToList();
+
+            var result = await http.GetAsync($"https://localhost:7168/api/shipment/getShipmentStatus?shipmentId={shipmentId}");
+            if (result.StatusCode == HttpStatusCode.OK)
+            {
+                var res =await result.Content.ReadFromJsonAsync<ResponseModel2>();
+                Statuses = res!.data!;
+            }
         }
 
         public Task UpdateProduct(int id, Product product)
